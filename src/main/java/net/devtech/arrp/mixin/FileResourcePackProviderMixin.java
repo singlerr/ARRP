@@ -42,13 +42,23 @@ public class FileResourcePackProviderMixin {
 
 		for (ResourcePack pack : list) {
 			adder.accept(ResourcePackProfile.create(
-				pack.getName(),
-				Text.literal(pack.getName()),
-				false,
-				(name) -> pack,
-				this.type,
-				ResourcePackProfile.InsertionPosition.TOP,
-				RUNTIME
+					pack.getName(),
+					Text.literal(pack.getName()),
+					false,
+					new ResourcePackProfile.PackFactory() {
+						@Override
+						public ResourcePack open(String name) {
+							return pack;
+						}
+
+						@Override
+						public ResourcePack openWithOverlays(String name, ResourcePackProfile.Metadata metadata) {
+							return pack;
+						}
+					},
+					this.type,
+					ResourcePackProfile.InsertionPosition.TOP,
+					RUNTIME
 			));
 		}
 	}
